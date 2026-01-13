@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Моно - Casino Royale</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/mono.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <!-- Уведомление снизу -->
+    <div class="notification-banner" id="notification-banner">
+        <div class="notification-content">
+            <div class="notification-icon" id="notification-icon">🎰</div>
+            <div class="notification-text">
+                <div class="notification-title" id="notification-title">Добро пожаловать в Моно!</div>
+                <div class="notification-message" id="notification-message">Выберите шанс выигрыша от 1% до 65%</div>
+            </div>
+            <button class="notification-close" id="notification-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Основной контейнер -->
+    <div class="container">
+        <!-- Статус бар -->
+        <div class="status-bar">
+            <div class="user-info">
+                <div class="user-avatar">🎮</div>
+                <div class="user-name" id="user-name">Игрок</div>
+            </div>
+            <div class="balance-container">
+                <div class="balance-item">
+                    <span class="balance-icon">🎰</span>
+                    <span class="balance-amount" id="spins-balance">10</span>
+                </div>
+                <div class="balance-item">
+                    <span class="balance-icon">⭐</span>
+                    <span class="balance-amount" id="stars-balance">1000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок игры -->
+        <div class="game-header">
+            <h1 class="game-title">🎯 МОНО</h1>
+            <p class="game-subtitle">Увеличивайте шанс выигрыша свайпом!</p>
+            <div class="game-rules">
+                <div class="rule-item">
+                    <span class="rule-icon">📊</span>
+                    <span class="rule-text">Шанс: от 1% до 65%</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-icon">💰</span>
+                    <span class="rule-text">Мин. ставка: от 4 stars</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-icon">🎁</span>
+                    <span class="rule-text">NFT шанс: 0.5%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Колесо Моно -->
+        <div class="mono-wheel-container">
+            <div class="wheel-wrapper">
+                <div class="mono-wheel" id="mono-wheel">
+                    <!-- Секторы будут созданы через JS -->
+                </div>
+                <div class="wheel-pointer">
+                    <div class="pointer-arrow"></div>
+                    <div class="pointer-line"></div>
+                </div>
+                <div class="wheel-center">
+                    <div class="center-text" id="current-chance-display">1%</div>
+                    <div class="center-subtext" id="current-multiplier-display">100x</div>
+                </div>
+            </div>
+            
+            <!-- Индикатор шанса -->
+            <div class="chance-indicator">
+                <div class="chance-label">Текущий шанс:</div>
+                <div class="chance-value" id="current-chance">1%</div>
+                <div class="chance-multiplier" id="current-multiplier">100x</div>
+                <div class="chance-min-bet" id="current-min-bet">
+                    <span class="min-bet-icon">💰</span>
+                    <span class="min-bet-text">Мин. ставка: 4 stars</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайдер для выбора шанса -->
+        <div class="mono-slider-container">
+            <div class="slider-header">
+                <div class="slider-title">Выберите шанс выигрыша</div>
+                <div class="slider-subtitle">Свайпайте вправо для увеличения шанса</div>
+            </div>
+            
+            <input type="range" min="1" max="65" value="1" class="mono-slider" id="mono-slider">
+            
+            <div class="chance-labels">
+                <div class="chance-label-item">
+                    <span class="label-percent">1%</span>
+                    <span class="label-multiplier">100x</span>
+                    <span class="label-min-bet">мин. 4⭐</span>
+                </div>
+                <div class="chance-label-item">
+                    <span class="label-percent">65%</span>
+                    <span class="label-multiplier">1.54x</span>
+                    <span class="label-min-bet">мин. 260⭐</span>
+                </div>
+            </div>
+            
+            <div class="chance-steps">
+                <div class="chance-step" data-chance="1" data-min-bet="4">
+                    <span class="step-percent">1%</span>
+                    <span class="step-min-bet">4⭐</span>
+                </div>
+                <div class="chance-step" data-chance="3" data-min-bet="12">
+                    <span class="step-percent">3%</span>
+                    <span class="step-min-bet">12⭐</span>
+                </div>
+                <div class="chance-step" data-chance="5" data-min-bet="20">
+                    <span class="step-percent">5%</span>
+                    <span class="step-min-bet">20⭐</span>
+                </div>
+                <div class="chance-step" data-chance="7" data-min-bet="28">
+                    <span class="step-percent">7%</span>
+                    <span class="step-min-bet">28⭐</span>
+                </div>
+                <div class="chance-step" data-chance="10" data-min-bet="40">
+                    <span class="step-percent">10%</span>
+                    <span class="step-min-bet">40⭐</span>
+                </div>
+                <div class="chance-step" data-chance="15" data-min-bet="60">
+                    <span class="step-percent">15%</span>
+                    <span class="step-min-bet">60⭐</span>
+                </div>
+                <div class="chance-step" data-chance="20" data-min-bet="80">
+                    <span class="step-percent">20%</span>
+                    <span class="step-min-bet">80⭐</span>
+                </div>
+                <div class="chance-step" data-chance="25" data-min-bet="100">
+                    <span class="step-percent">25%</span>
+                    <span class="step-min-bet">100⭐</span>
+                </div>
+                <div class="chance-step" data-chance="30" data-min-bet="120">
+                    <span class="step-percent">30%</span>
+                    <span class="step-min-bet">120⭐</span>
+                </div>
+                <div class="chance-step" data-chance="40" data-min-bet="160">
+                    <span class="step-percent">40%</span>
+                    <span class="step-min-bet">160⭐</span>
+                </div>
+                <div class="chance-step" data-chance="50" data-min-bet="200">
+                    <span class="step-percent">50%</span>
+                    <span class="step-min-bet">200⭐</span>
+                </div>
+                <div class="chance-step" data-chance="65" data-min-bet="260">
+                    <span class="step-percent">65%</span>
+                    <span class="step-min-bet">260⭐</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Управление ставкой -->
+        <div class="bet-control-section">
+            <div class="bet-header">
+                <div class="bet-title">Выберите ставку</div>
+                <div class="bet-subtitle">1 спин = 50 stars</div>
+                <div class="bet-warning" id="bet-warning">
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-text" id="min-bet-warning">Минимальная ставка: 4 stars</span>
+                </div>
+            </div>
+            
+            <!-- Рекомендованные ставки -->
+            <div class="recommended-bets" id="recommended-bets">
+                <!-- Будут созданы через JS -->
+            </div>
+            
+            <div class="bet-controls">
+                <div class="bet-control-row">
+                    <button class="bet-control-btn" data-action="decrease">
+                        <span class="control-icon">➖</span>
+                        <span class="control-text">Меньше</span>
+                    </button>
+                    <div class="bet-display">
+                        <div class="bet-spins" id="current-bet-spins">1 спин</div>
+                        <div class="bet-stars" id="current-bet-stars">50 stars</div>
+                    </div>
+                    <button class="bet-control-btn" data-action="increase">
+                        <span class="control-icon">➕</span>
+                        <span class="control-text">Больше</span>
+                    </button>
+                </div>
+                
+                <div class="bet-quick-controls">
+                    <button class="bet-quick-btn" data-multiplier="1">1x</button>
+                    <button class="bet-quick-btn" data-multiplier="2">2x</button>
+                    <button class="bet-quick-btn" data-multiplier="5">5x</button>
+                    <button class="bet-quick-btn" data-multiplier="10">10x</button>
+                    <button class="bet-quick-btn" data-multiplier="max">MAX</button>
+                </div>
+            </div>
+            
+            <div class="bet-limits">
+                <div class="limit-item">
+                    <span class="limit-label">Мин. ставка:</span>
+                    <span class="limit-value" id="min-bet-value">4 stars</span>
+                </div>
+                <div class="limit-item">
+                    <span class="limit-label">Макс. ставка:</span>
+                    <span class="limit-value" id="max-bet-value">5000 stars</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Потенциальный выигрыш -->
+        <div class="potential-win-card">
+            <div class="potential-win-header">
+                <div class="win-title">Потенциальный выигрыш</div>
+                <div class="win-subtitle">При текущем шансе</div>
+            </div>
+            <div class="potential-win-grid">
+                <div class="win-item">
+                    <div class="win-label">Выигрыш спинов:</div>
+                    <div class="win-amount" id="potential-win-spins">100</div>
+                </div>
+                <div class="win-item">
+                    <div class="win-label">Выигрыш stars:</div>
+                    <div class="win-amount stars" id="potential-win-stars">5000</div>
+                </div>
+                <div class="win-item">
+                    <div class="win-label">Чистая прибыль:</div>
+                    <div class="win-amount profit" id="potential-profit">4950</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка спина -->
+        <div class="spin-button-container">
+            <button class="spin-button" id="spin-button">
+                <span class="spin-icon">🎯</span>
+                <span class="spin-text">КРУТИТЬ</span>
+                <span class="spin-cost" id="spin-cost-display">50 stars</span>
+            </button>
+            <div class="spin-info">
+                <div class="info-item">
+                    <span class="info-icon">🎰</span>
+                    <span class="info-text" id="current-bet-info">Ставка: 1 спин</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">📊</span>
+                    <span class="info-text" id="current-chance-info">Шанс: 1%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Результат спина -->
+        <div class="result-container" id="result-container">
+            <div class="result-content" id="result-content">
+                <!-- Результат будет показан здесь -->
+            </div>
+        </div>
+
+        <!-- Статистика игры -->
+        <div class="stats-container">
+            <div class="stats-header">
+                <h3 class="stats-title">📊 Статистика игры</h3>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Всего игр:</div>
+                    <div class="stat-value" id="total-games">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Побед:</div>
+                    <div class="stat-value" id="wins-count">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Win Rate:</div>
+                    <div class="stat-value" id="win-rate">0%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">NFT получено:</div>
+                    <div class="stat-value" id="nfts-won">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="navigation">
+            <button class="nav-btn" id="back-btn">
+                <span class="nav-icon">←</span>
+                <span class="nav-text">Назад</span>
+            </button>
+            <button class="nav-btn" id="rules-btn">
+                <span class="nav-icon">📖</span>
+                <span class="nav-text">Правила</span>
+            </button>
+            <button class="nav-btn" id="shop-btn">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-text">Магазин</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно правил -->
+    <div class="modal-overlay" id="rules-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📖 Правила игры МОНО</h2>
+                <button class="modal-close" id="rules-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rules-list">
+                    <div class="rule">
+                        <div class="rule-number">1</div>
+                        <div class="rule-text">
+                            <strong>Выберите шанс выигрыша</strong> от 1% до 65% с помощью слайдера
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="rule-number">2</div>
+                        <div class="rule-text">
+                            <strong>Минимальная ставка зависит от шанса:</strong><br>
+                            1% - 4 stars, 3% - 12 stars, 5% - 20 stars, 7% - 28 stars,<br>
+                            10% - 40 stars, 15% - 60 stars, 20% - 80 stars, 25% - 100 stars,<br>
+                            30% - 120 stars, 40% - 160 stars, 50% - 200 stars, 65% - 260 stars
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="rule-number">3</div>
+                        <div class="rule-text">
+                            <strong>Крутите колесо</strong> - если выпадает зеленый сектор (ваш шанс), вы побеждаете!
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="rule-number">4</div>
+                        <div class="rule-text">
+                            <strong>Множитель зависит от шанса:</strong><br>
+                            1% = 100x, 3% = 33x, 5% = 20x, 7% = 14.3x,<br>
+                            10% = 10x, 15% = 6.67x, 20% = 5x, 25% = 4x,<br>
+                            30% = 3.33x, 40% = 2.5x, 50% = 2x, 65% = 1.54x
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="rule-number">5</div>
+                        <div class="rule-text">
+                            <strong>NFT шанс:</strong> 0.5% вероятность получить NFT подарок при победе
+                        </div>
+                    </div>
+                </div>
+                <div class="rules-note">
+                    <div class="note-icon">💡</div>
+                    <div class="note-text">
+                        <strong>Совет:</strong> Чем выше шанс, тем ниже множитель, но выше вероятность выигрыша. 
+                        Выбирайте стратегию в зависимости от вашего бюджета!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script src="js/mono.js"></script>
+</body>
+</html>
