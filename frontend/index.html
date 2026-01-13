@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Casino Royale - Загрузка...</title>
+    <link rel="stylesheet" href="css/loading.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #252542 100%);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-container {
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 64px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        .game-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #FFD700, #FF8C00, #FF4500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading-bar-container {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #FF8C00, #FFD700);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        .loading-percentage {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 10px;
+            color: #FFD700;
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #b0b0c0;
+            margin-top: 20px;
+            min-height: 24px;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: #808099;
+            margin-top: 40px;
+            opacity: 0.7;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-icon {
+            background: linear-gradient(135deg, #FF8C00, #FFD700);
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-icon {
+            background: #32CD32;
+        }
+
+        .step-name {
+            font-size: 12px;
+            color: #b0b0c0;
+        }
+
+        .version {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #808099;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading-container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Анимация появления элементов */
+        .logo { animation-delay: 0.1s; }
+        .game-title { animation-delay: 0.2s; }
+        .loading-bar-container { animation-delay: 0.3s; }
+        .loading-text { animation-delay: 0.4s; }
+        .progress-steps { animation-delay: 0.5s; }
+
+        .loading-container > * {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Для мобильных устройств */
+        @media (max-width: 480px) {
+            .game-title {
+                font-size: 24px;
+            }
+            
+            .logo {
+                font-size: 48px;
+            }
+            
+            .progress-steps {
+                margin-top: 20px;
+            }
+            
+            .step-name {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <!-- Логотип -->
+        <div class="logo">🎰</div>
+        
+        <!-- Название игры -->
+        <div class="game-title">CASINO ROYALE</div>
+        
+        <!-- Полоса загрузки -->
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        
+        <!-- Процент загрузки -->
+        <div class="loading-percentage" id="loading-percentage">0%</div>
+        
+        <!-- Текст состояния -->
+        <div class="loading-text" id="loading-text">Инициализация игры...</div>
+        
+        <!-- Подсказка -->
+        <div class="hint" id="hint">Загружаем лучшие анимации и эффекты...</div>
+        
+        <!-- Шаги прогресса -->
+        <div class="progress-steps">
+            <div class="step active" id="step1">
+                <div class="step-icon">1</div>
+                <div class="step-name">Инициализация</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-icon">2</div>
+                <div class="step-name">Загрузка данных</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-icon">3</div>
+                <div class="step-name">Подготовка игр</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-icon">4</div>
+                <div class="step-name">Запуск</div>
+            </div>
+        </div>
+        
+        <!-- Версия -->
+        <div class="version" id="version">v1.0.0</div>
+    </div>
+
+    <script>
+        class LoadingScreen {
+            constructor() {
+                this.loadingBar = document.getElementById('loading-bar');
+                this.loadingPercentage = document.getElementById('loading-percentage');
+                this.loadingText = document.getElementById('loading-text');
+                this.hint = document.getElementById('hint');
+                this.version = document.getElementById('version');
+                
+                this.steps = {
+                    step1: document.getElementById('step1'),
+                    step2: document.getElementById('step2'),
+                    step3: document.getElementById('step3'),
+                    step4: document.getElementById('step4')
+                };
+                
+                this.hints = [
+                    "Подключаемся к серверу...",
+                    "Загружаем данные пользователя...",
+                    "Инициализируем игры...",
+                    "Подготавливаем анимации...",
+                    "Проверяем соединение...",
+                    "Загружаем графику...",
+                    "Оптимизируем производительность...",
+                    "Почти готово..."
+                ];
+                
+                this.loadingPhases = [
+                    { percent: 15, text: "Инициализация Telegram Web App...", step: 1 },
+                    { percent: 30, text: "Загрузка данных пользователя...", step: 1 },
+                    { percent: 45, text: "Проверка баланса...", step: 2 },
+                    { percent: 60, text: "Загрузка игровых ресурсов...", step: 2 },
+                    { percent: 75, text: "Инициализация игр...", step: 3 },
+                    { percent: 85, text: "Подготовка интерфейса...", step: 3 },
+                    { percent: 95, text: "Финальная настройка...", step: 4 },
+                    { percent: 100, text: "Загрузка завершена!", step: 4 }
+                ];
+                
+                this.currentPhase = 0;
+                this.currentPercent = 0;
+                this.hintInterval = null;
+                this.loadingInterval = null;
+                
+                // Устанавливаем версию
+                this.version.textContent = `v${this.getRandomVersion()}`;
+            }
+            
+            getRandomVersion() {
+                const versions = ['1.0.0', '1.1.2', '1.2.1', '1.3.0', '1.4.5'];
+                return versions[Math.floor(Math.random() * versions.length)];
+            }
+            
+            startLoading() {
+                // Начинаем менять подсказки
+                this.startHintRotation();
+                
+                // Начинаем процесс загрузки
+                this.startProgressSimulation();
+                
+                // Проверяем Telegram Web App
+                this.checkTelegramWebApp();
+            }
+            
+            startHintRotation() {
+                let hintIndex = 0;
+                this.hintInterval = setInterval(() => {
+                    this.hint.textContent = this.hints[hintIndex];
+                    hintIndex = (hintIndex + 1) % this.hints.length;
+                }, 2000);
+            }
+            
+            startProgressSimulation() {
+                this.loadingInterval = setInterval(() => {
+                    if (this.currentPhase >= this.loadingPhases.length) {
+                        this.completeLoading();
+                        return;
+                    }
+                    
+                    const phase = this.loadingPhases[this.currentPhase];
+                    
+                    // Плавно увеличиваем процент
+                    if (this.currentPercent < phase.percent) {
+                        this.currentPercent += Math.random() * 3 + 1;
+                        if (this.currentPercent > phase.percent) {
+                            this.currentPercent = phase.percent;
+                        }
+                        
+                        this.updateProgress(this.currentPercent, phase.text);
+                        
+                        // Обновляем активный шаг
+                        this.updateActiveStep(phase.step);
+                    } else {
+                        // Переходим к следующей фазе
+                        this.currentPhase++;
+                    }
+                }, 100);
+            }
+            
+            updateProgress(percent, text) {
+                // Ограничиваем процент
+                const displayPercent = Math.min(100, Math.floor(percent));
+                
+                // Обновляем полосу загрузки
+                this.loadingBar.style.width = `${displayPercent}%`;
+                
+                // Обновляем процент
+                this.loadingPercentage.textContent = `${displayPercent}%`;
+                
+                // Обновляем текст
+                if (text) {
+                    this.loadingText.textContent = text;
+                }
+                
+                // Меняем цвет при достижении 100%
+                if (displayPercent >= 100) {
+                    this.loadingBar.style.background = 'linear-gradient(90deg, #32CD32, #00FF7F)';
+                    this.loadingPercentage.style.color = '#32CD32';
+                }
+            }
+            
+            updateActiveStep(stepNumber) {
+                // Сбрасываем все шаги
+                Object.values(this.steps).forEach(step => {
+                    step.classList.remove('active', 'completed');
+                });
+                
+                // Отмечаем пройденные шаги как completed
+                for (let i = 1; i < stepNumber; i++) {
+                    if (this.steps[`step${i}`]) {
+                        this.steps[`step${i}`].classList.add('completed');
+                    }
+                }
+                
+                // Отмечаем текущий шаг как active
+                if (this.steps[`step${stepNumber}`]) {
+                    this.steps[`step${stepNumber}`].classList.add('active');
+                }
+            }
+            
+            checkTelegramWebApp() {
+                setTimeout(() => {
+                    if (window.Telegram && window.Telegram.WebApp) {
+                        // Telegram Web App доступен
+                        console.log('Telegram Web App инициализирован');
+                        
+                        // Меняем тему на темную
+                        window.Telegram.WebApp.setHeaderColor('#0f0f1a');
+                        window.Telegram.WebApp.setBackgroundColor('#0f0f1a');
+                        window.Telegram.WebApp.enableClosingConfirmation();
+                        
+                        // Расширяем на весь экран
+                        window.Telegram.WebApp.expand();
+                        
+                        // Получаем данные пользователя
+                        const user = window.Telegram.WebApp.initDataUnsafe.user;
+                        if (user) {
+                            console.log('Пользователь:', user);
+                            // Сохраняем в localStorage для использования в играх
+                            localStorage.setItem('telegram_user_id', user.id);
+                            localStorage.setItem('telegram_username', user.username || '');
+                            localStorage.setItem('telegram_first_name', user.first_name || '');
+                        }
+                    } else {
+                        console.log('Telegram Web App не обнаружен. Режим демо.');
+                        // Устанавливаем демо-данные
+                        localStorage.setItem('telegram_user_id', 'demo_user');
+                        localStorage.setItem('telegram_username', 'demo');
+                        localStorage.setItem('telegram_first_name', 'Демо Игрок');
+                    }
+                }, 1000);
+            }
+            
+            completeLoading() {
+                // Останавливаем интервалы
+                clearInterval(this.loadingInterval);
+                clearInterval(this.hintInterval);
+                
+                // Устанавливаем 100%
+                this.updateProgress(100, "Готово! Запускаем игру...");
+                this.updateActiveStep(4);
+                
+                // Добавляем финальную анимацию
+                this.loadingText.style.color = '#32CD32';
+                this.loadingText.style.fontWeight = '700';
+                
+                // Добавляем анимацию пульсации
+                this.loadingPercentage.style.animation = 'pulse 0.5s infinite';
+                
+                // Ждем 1.5 секунды и переходим к игре
+                setTimeout(() => {
+                    this.transitionToGame();
+                }, 1500);
+            }
+            
+            transitionToGame() {
+                // Добавляем анимацию исчезновения
+                document.body.style.opacity = '0';
+                document.body.style.transition = 'opacity 0.5s ease';
+                
+                // Ждем завершения анимации и переходим
+                setTimeout(() => {
+                    // Сохраняем время загрузки для статистики
+                    const loadTime = Date.now();
+                    localStorage.setItem('game_load_time', loadTime);
+                    
+                    // Переходим к игре Моно
+                    window.location.href = 'mono.html';
+                }, 500);
+            }
+            
+            // Быстрая загрузка для тестирования (Shift + Click)
+            enableQuickLoad() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.shiftKey && e.code === 'KeyL') {
+                        e.preventDefault();
+                        this.completeLoading();
+                    }
+                });
+                
+                // Двойной тап для быстрой загрузки
+                let tapCount = 0;
+                let lastTap = 0;
+                
+                document.addEventListener('click', (e) => {
+                    const currentTime = new Date().getTime();
+                    const tapLength = currentTime - lastTap;
+                    
+                    if (tapLength < 300 && tapLength > 0) {
+                        tapCount++;
+                        if (tapCount >= 3) {
+                            this.completeLoading();
+                        }
+                    } else {
+                        tapCount = 1;
+                    }
+                    
+                    lastTap = currentTime;
+                });
+            }
+        }
+
+        // Инициализация загрузки при полной загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = new LoadingScreen();
+            loadingScreen.startLoading();
+            loadingScreen.enableQuickLoad();
+            
+            // Запускаем фоновую музыку (опционально)
+            try {
+                const audio = new Audio('assets/sounds/loading.mp3');
+                audio.volume = 0.3;
+                audio.loop = true;
+                // audio.play(); // Раскомментировать если есть музыка
+            } catch (e) {
+                console.log('Аудио недоступно');
+            }
+            
+            // Обработка ошибок загрузки
+            window.addEventListener('error', (e) => {
+                console.error('Ошибка загрузки:', e);
+                loadingScreen.loadingText.textContent = "Ошибка загрузки. Попробуйте обновить страницу.";
+                loadingScreen.loadingText.style.color = '#DC143C';
+            });
+        });
+    </script>
+</body>
+</html>
