@@ -1,0 +1,166 @@
+/* Уведомление снизу */
+.notification-banner {
+    position: fixed;
+    bottom: -100px; /* Скрыто за экраном */
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1a1a2e, #252542);
+    border-top: 2px solid rgba(46, 109, 164, 0.5);
+    padding: 16px;
+    z-index: 3000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    transition: bottom 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.notification-banner.show {
+    bottom: 0; /* Показываем */
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.notification-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.notification-text {
+    flex: 1;
+}
+
+.notification-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.notification-message {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+/* Типы уведомлений */
+.notification-banner.success {
+    border-top-color: #32CD32;
+    background: linear-gradient(135deg, rgba(50, 205, 50, 0.1), rgba(50, 205, 50, 0.05));
+}
+
+.notification-banner.error {
+    border-top-color: #DC143C;
+    background: linear-gradient(135deg, rgba(220, 20, 60, 0.1), rgba(220, 20, 60, 0.05));
+}
+
+.notification-banner.warning {
+    border-top-color: #FFD700;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+}
+
+.notification-banner.info {
+    border-top-color: #1E90FF;
+    background: linear-gradient(135deg, rgba(30, 144, 255, 0.1), rgba(30, 144, 255, 0.05));
+}
+
+.notification-banner.nft {
+    border-top-color: #8A2BE2;
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(138, 43, 226, 0.05));
+}
+
+/* Анимации для уведомлений */
+@keyframes slideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.notification-banner.show .notification-content {
+    animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.notification-banner.hide .notification-content {
+    animation: slideDown 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.notification-banner.pulse .notification-icon {
+    animation: pulse 2s infinite;
+}
+
+/* Адаптивность уведомлений */
+@media (max-width: 480px) {
+    .notification-banner {
+        padding: 12px;
+    }
+    
+    .notification-content {
+        gap: 12px;
+    }
+    
+    .notification-icon {
+        font-size: 24px;
+    }
+    
+    .notification-title {
+        font-size: 16px;
+    }
+    
+    .notification-message {
+        font-size: 13px;
+    }
+    
+    .notification-close {
+        font-size: 20px;
+        width: 28px;
+        height: 28px;
+    }
+}
